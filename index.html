@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Practicals 1-10</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f7f9;color:#111827;line-height:1.5}
+  header{position:sticky;top:0;z-index:20;background:#111827;color:#fff;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+  header h1{font-size:20px;font-weight:700}
+  header p{font-size:13px;color:#cbd5e1;margin-top:2px}
+  .search{margin-top:10px}
+  .search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #374151;background:#1f2937;color:#fff;font-size:15px;outline:none}
+  .search input::placeholder{color:#9ca3af}
+  nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  nav a{color:#fff;text-decoration:none;background:#374151;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}
+  nav a:active,nav a:hover{background:#2563eb}
+  main{max-width:900px;margin:0 auto;padding:16px 12px 60px}
+  section.practical{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin:16px 0;scroll-margin-top:170px}
+  section.practical h2{font-size:19px;font-weight:800;margin-bottom:4px}
+  section.practical .aim{font-size:14px;color:#4b5563;margin-bottom:12px}
+  .codebox{border:1px solid #1f2937;border-radius:12px;overflow:hidden;background:#0d1117}
+  .codehead{display:flex;justify-content:space-between;align-items:center;background:#161b22;color:#c9d1d9;padding:8px 12px;border-bottom:1px solid #30363d}
+  .codehead .lang{font-size:12px;font-weight:600;letter-spacing:.02em;color:#9ca3af}
+  .copy-btn{display:inline-flex;align-items:center;gap:6px;background:transparent;color:#c9d1d9;border:1px solid #30363d;padding:5px 10px;border-radius:8px;font-size:13px;cursor:pointer;white-space:nowrap}
+  .copy-btn:hover{background:#21262d;color:#fff}
+  .copy-btn.copied{color:#3fb950;border-color:#3fb950}
+  pre{overflow-x:auto;padding:14px}
+  pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.6;color:#e6edf3;white-space:pre}
+  .outlabel{font-size:13px;font-weight:700;color:#374151;margin:14px 0 6px}
+  .outbox{background:#f8fafc;border-color:#cbd5e1}
+  .outbox pre code{color:#1f2937}
+  .outhead{background:#e2e8f0;color:#334155;border-bottom-color:#cbd5e1}
+  .outhead .lang{color:#64748b}
+  .outhead .copy-btn{color:#334155;border-color:#94a3b8}
+  .hidden{display:none!important}
+  footer{text-align:center;color:#6b7280;font-size:12px;padding:20px}
+  @media(max-width:480px){pre code{font-size:12.5px}section.practical{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>DSA Practicals 1-10</h1>
+  <p>Practicals 1-3 are C++ (.cpp) &middot; Practicals 4-10 are Python (.py) &middot; Tap Copy on any block.</p>
+  <div class="search"><input id="search" type="search" placeholder="Search practicals... e.g. stack, sorting, tree, knapsack"></div>
+  <nav>
+    <a href="#practical-1">P1</a><a href="#practical-2">P2</a><a href="#practical-3">P3</a><a href="#practical-4">P4</a><a href="#practical-5">P5</a>
+    <a href="#practical-6">P6</a><a href="#practical-7">P7</a><a href="#practical-8">P8</a><a href="#practical-9">P9</a><a href="#practical-10">P10</a>
+  </nav>
+</header>
+<main id="main">
+  <section class="practical" id="practical-1" data-search="practical 1 student database (dynamic memory, searching and sorting) design a student database that stores id, name and cgpa using dynamically allocated memory; expands storage with realloc(); performs linear and binary search by id; sorts records by name and cgpa; and compares search operations.">
+    <h2>Practical 1</h2>
+    <p class="aim"><strong>Student Database (Dynamic Memory, Searching and Sorting)</strong><br>Design a student database that stores ID, name and CGPA using dynamically allocated memory; expands storage with realloc(); performs linear and binary search by ID; sorts records by name and CGPA; and compares search operations.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment1_student_database.cpp</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;limits&gt;
+using namespace std;
+
+struct Student {
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+void addStudent(Student*&amp; db, int&amp; count) {
+    Student* temp = (Student*)realloc(db, (count + 1) * sizeof(Student));
+    if (temp == nullptr) {
+        cout &lt;&lt; &quot;Memory allocation failed.\n&quot;;
+        return;
+    }
+    db = temp;
+
+    cout &lt;&lt; &quot;Enter student ID: &quot;;
+    cin &gt;&gt; db[count].id;
+    cout &lt;&lt; &quot;Enter student name (one word): &quot;;
+    cin &gt;&gt; db[count].name;
+    cout &lt;&lt; &quot;Enter CGPA: &quot;;
+    cin &gt;&gt; db[count].cgpa;
+    count++;
+    cout &lt;&lt; &quot;Student added successfully.\n&quot;;
+}
+
+void displayStudents(const Student* db, int count) {
+    if (count == 0) {
+        cout &lt;&lt; &quot;No student records available.\n&quot;;
+        return;
+    }
+    cout &lt;&lt; &quot;\nID\tName\t\tCGPA\n&quot;;
+    cout &lt;&lt; &quot;--------------------------------\n&quot;;
+    for (int i = 0; i &lt; count; i++)
+        cout &lt;&lt; db[i].id &lt;&lt; &quot;\t&quot; &lt;&lt; db[i].name &lt;&lt; &quot;\t\t&quot; &lt;&lt; db[i].cgpa &lt;&lt; &#x27;\n&#x27;;
+}
+
+int linearSearch(const Student* db, int count, int id, int&amp; comparisons) {
+    comparisons = 0;
+    for (int i = 0; i &lt; count; i++) {
+        comparisons++;
+        if (db[i].id == id) return i;
+    }
+    return -1;
+}
+
+int binarySearch(const Student* db, int count, int id, int&amp; comparisons) {
+    int low = 0, high = count - 1;
+    comparisons = 0;
+    while (low &lt;= high) {
+        int mid = low + (high - low) / 2;
+        comparisons++;
+        if (db[mid].id == id) return mid;
+        if (db[mid].id &lt; id) low = mid + 1;
+        else high = mid - 1;
+    }
+    return -1;
+}
+
+void bubbleSortByName(Student* db, int count) {
+    for (int i = 0; i &lt; count - 1; i++)
+        for (int j = 0; j &lt; count - i - 1; j++)
+            if (strcmp(db[j].name, db[j + 1].name) &gt; 0) {
+                Student temp = db[j];
+                db[j] = db[j + 1];
+                db[j + 1] = temp;
+            }
+}
+
+void insertionSortByCGPA(Student* db, int count) {
+    for (int i = 1; i &lt; count; i++) {
+        Student key = db[i];
+        int j = i - 1;
+
+
+        while (j &gt;= 0 &amp;&amp; db[j].cgpa &lt; key.cgpa) { // Descending order
+            db[j + 1] = db[j];
+            j--;
+        }
+        db[j + 1] = key;
+    }
+}
+
+void sortByID(Student* db, int count) {
+    for (int i = 0; i &lt; count - 1; i++)
+        for (int j = 0; j &lt; count - i - 1; j++)
+            if (db[j].id &gt; db[j + 1].id) {
+                Student temp = db[j];
+                db[j] = db[j + 1];
+                db[j + 1] = temp;
+            }
+}
+
+int main() {
+    Student* db = nullptr;
+    int count = 0, choice;
+
+    do {
+        cout &lt;&lt; &quot;\n--- STUDENT DATABASE ---\n&quot;;
+        cout &lt;&lt; &quot;1. Add student\n2. Display students\n&quot;;
+        cout &lt;&lt; &quot;3. Linear search by ID\n4. Sort by name (A-Z)\n&quot;;
+        cout &lt;&lt; &quot;5. Sort by CGPA (descending)\n&quot;;
+        cout &lt;&lt; &quot;6. Sort by ID and perform binary search\n&quot;;
+        cout &lt;&lt; &quot;0. Exit\nEnter choice: &quot;;
+        cin &gt;&gt; choice;
+
+        if (choice == 1) {
+            addStudent(db, count);
+        } else if (choice == 2) {
+            displayStudents(db, count);
+        } else if (choice == 3) {
+            int id, comparisons;
+            cout &lt;&lt; &quot;Enter ID to search: &quot;;
+            cin &gt;&gt; id;
+            int index = linearSearch(db, count, id, comparisons);
+            if (index != -1)
+                cout &lt;&lt; &quot;Found: &quot; &lt;&lt; db[index].name &lt;&lt; &quot;, CGPA &quot; &lt;&lt; db[index].cgpa &lt;&lt; &#x27;\n&#x27;;
+            else
+                cout &lt;&lt; &quot;Student not found.\n&quot;;
+            cout &lt;&lt; &quot;Linear-search comparisons: &quot; &lt;&lt; comparisons &lt;&lt; &#x27;\n&#x27;;
+        } else if (choice == 4) {
+            bubbleSortByName(db, count);
+            cout &lt;&lt; &quot;Records sorted alphabetically by name.\n&quot;;
+            displayStudents(db, count);
+        } else if (choice == 5) {
+            insertionSortByCGPA(db, count);
+            cout &lt;&lt; &quot;Records sorted by CGPA (highest first).\n&quot;;
+            displayStudents(db, count);
+        } else if (choice == 6) {
+            sortByID(db, count);
+            int id, linearComparisons, binaryComparisons;
+            cout &lt;&lt; &quot;Records sorted by ID. Enter ID to search: &quot;;
+            cin &gt;&gt; id;
+            int linearIndex = linearSearch(db, count, id, linearComparisons);
+            int binaryIndex = binarySearch(db, count, id, binaryComparisons);
+            cout &lt;&lt; &quot;Linear search: &quot; &lt;&lt; (linearIndex == -1 ? &quot;Not found&quot; : &quot;Found&quot;)
+                  &lt;&lt; &quot; (&quot; &lt;&lt; linearComparisons &lt;&lt; &quot; comparisons)\n&quot;;
+            cout &lt;&lt; &quot;Binary search: &quot; &lt;&lt; (binaryIndex == -1 ? &quot;Not found&quot; : &quot;Found&quot;)
+                  &lt;&lt; &quot; (&quot; &lt;&lt; binaryComparisons &lt;&lt; &quot; comparisons)\n&quot;;
+            cout &lt;&lt; &quot;Note: Binary search requires records sorted by ID.\n&quot;;
+        } else if (choice != 0) {
+            cout &lt;&lt; &quot;Invalid choice.\n&quot;;
+        }
+    } while (choice != 0);
+
+    free(db);
+    cout &lt;&lt; &quot;Memory released. Program ended.\n&quot;;
+    return 0;
+}</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — add 3 students, then use the menu:
+
+Add: 101 Aarav 9.1  |  102 Zara 8.5  |  103 Mihir 9.8
+
+Display students:
+ID      Name            CGPA
+--------------------------------
+101     Aarav           9.1
+102     Zara            8.5
+103     Mihir           9.8
+
+Linear search for ID 102:
+Found: Zara, CGPA 8.5
+Linear-search comparisons: 2
+
+Sort by name (A-Z)      -&gt; Aarav, Mihir, Zara
+Sort by CGPA (desc.)    -&gt; Mihir 9.8, Aarav 9.1, Zara 8.5
+
+Sort by ID + binary search for ID 101:
+Linear search: Found (1 comparisons)
+Binary search: Found (2 comparisons)</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-2" data-search="practical 2 stack adt using linked list – infix to postfix and prefix implement a stack as an abstract data type using a singly linked list and use it to convert an infix expression into postfix and prefix expressions. this version accepts single-character operands (letters or digits).">
+    <h2>Practical 2</h2>
+    <p class="aim"><strong>Stack ADT Using Linked List – Infix to Postfix and Prefix</strong><br>Implement a stack as an abstract data type using a singly linked list and use it to convert an infix expression into postfix and prefix expressions. This version accepts single-character operands (letters or digits).</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment2_infix_conversion.cpp</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+using namespace std;
+
+struct Node {
+    char data;
+    Node* next;
+    Node(char value) : data(value), next(nullptr) {}
+};
+
+class Stack {
+private:
+    Node* topNode;
+public:
+    Stack() : topNode(nullptr) {}
+    ~Stack() {
+        while (!isEmpty()) pop();
+    }
+    void push(char value) {
+        Node* newNode = new Node(value);
+        newNode-&gt;next = topNode;
+        topNode = newNode;
+    }
+    char pop() {
+        if (isEmpty()) return &#x27;\0&#x27;;
+        Node* temp = topNode;
+        char value = temp-&gt;data;
+        topNode = topNode-&gt;next;
+        delete temp;
+        return value;
+    }
+    char top() const {
+        return isEmpty() ? &#x27;\0&#x27; : topNode-&gt;data;
+    }
+    bool isEmpty() const {
+        return topNode == nullptr;
+    }
+};
+
+int precedence(char op) {
+    if (op == &#x27;^&#x27;) return 3;
+    if (op == &#x27;*&#x27; || op == &#x27;/&#x27;) return 2;
+    if (op == &#x27;+&#x27; || op == &#x27;-&#x27;) return 1;
+    return -1;
+}
+
+bool isOperator(char ch) {
+    return ch == &#x27;+&#x27; || ch == &#x27;-&#x27; || ch == &#x27;*&#x27; || ch == &#x27;/&#x27; || ch == &#x27;^&#x27;;
+}
+
+// forPrefix = true flips the equal-precedence tie-break, because the
+// expression has been reversed before conversion.
+string infixToPostfix(const string&amp; infix, bool forPrefix = false) {
+    Stack st;
+    string postfix;
+    for (char ch : infix) {
+        if (isspace(static_cast&lt;unsigned char&gt;(ch))) continue;
+        if (isalnum(static_cast&lt;unsigned char&gt;(ch))) {
+            postfix += ch;
+        } else if (ch == &#x27;(&#x27;) {
+            st.push(ch);
+        } else if (ch == &#x27;)&#x27;) {
+            while (!st.isEmpty() &amp;&amp; st.top() != &#x27;(&#x27;)
+                postfix += st.pop();
+            if (st.isEmpty()) return &quot;Invalid expression: mismatched parentheses&quot;;
+            st.pop();  // Remove &#x27;(&#x27;
+        } else if (isOperator(ch)) {
+            while (!st.isEmpty() &amp;&amp; st.top() != &#x27;(&#x27; &amp;&amp;
+                   (precedence(st.top()) &gt; precedence(ch) ||
+                    (precedence(st.top()) == precedence(ch) &amp;&amp;
+                     (forPrefix ? ch == &#x27;^&#x27; : ch != &#x27;^&#x27;)))) {
+                postfix += st.pop();
+            }
+            st.push(ch);
+        } else {
+            return &quot;Invalid expression: unsupported character&quot;;
+        }
+    }
+    while (!st.isEmpty()) {
+        if (st.top() == &#x27;(&#x27;)
+            return &quot;Invalid expression: mismatched parentheses&quot;;
+        postfix += st.pop();
+    }
+    return postfix;
+}
+
+string infixToPrefix(const string&amp; infix) {
+    string reversed = infix;
+    reverse(reversed.begin(), reversed.end());
+    for (char&amp; ch : reversed) {
+        if (ch == &#x27;(&#x27;) ch = &#x27;)&#x27;;
+        else if (ch == &#x27;)&#x27;) ch = &#x27;(&#x27;;
+    }
+    string postfix = infixToPostfix(reversed, true);
+    if (postfix.rfind(&quot;Invalid expression:&quot;, 0) == 0) return postfix;
+    reverse(postfix.begin(), postfix.end());
+    return postfix;
+}
+
+int main() {
+    string infix;
+    cout &lt;&lt; &quot;Enter an infix expression (single-character operands): &quot;;
+    getline(cin, infix);
+
+    string postfix = infixToPostfix(infix);
+    if (postfix.rfind(&quot;Invalid expression:&quot;, 0) == 0) {
+        cout &lt;&lt; postfix &lt;&lt; &#x27;\n&#x27;;
+        return 0;
+    }
+    string prefix = infixToPrefix(infix);
+
+    cout &lt;&lt; &quot;Infix   : &quot; &lt;&lt; infix &lt;&lt; &#x27;\n&#x27;;
+    cout &lt;&lt; &quot;Postfix : &quot; &lt;&lt; postfix &lt;&lt; &#x27;\n&#x27;;
+    cout &lt;&lt; &quot;Prefix  : &quot; &lt;&lt; prefix &lt;&lt; &#x27;\n&#x27;;
+    return 0;
+}</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run:
+
+Enter an infix expression (single-character operands): A+B*C
+Infix   : A+B*C
+Postfix : ABC*+
+Prefix  : +A*BC
+
+More checks:  (A+B)*C  -&gt; Postfix AB+C* , Prefix *+ABC
+              A^B^C    -&gt; Postfix ABC^^ , Prefix ^A^BC</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-3" data-search="practical 3 circular queue using array implement a fixed-size circular queue using an array and perform insertion (enqueue), deletion (dequeue) and display operations. handle both queue-full and queue-empty conditions.">
+    <h2>Practical 3</h2>
+    <p class="aim"><strong>Circular Queue Using Array</strong><br>Implement a fixed-size circular queue using an array and perform insertion (enqueue), deletion (dequeue) and display operations. Handle both queue-full and queue-empty conditions.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment3_circular_queue.cpp</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+const int MAX = 5;
+
+class CircularQueue {
+private:
+    int arr[MAX];
+    int front, rear;
+
+public:
+    CircularQueue() : front(-1), rear(-1) {}
+
+    bool isEmpty() const {
+        return front == -1;
+    }
+
+    bool isFull() const {
+        return (front == 0 &amp;&amp; rear == MAX - 1) ||
+                (front == rear + 1);
+    }
+
+    void enqueue(int value) {
+        if (isFull()) {
+            cout &lt;&lt; &quot;Queue is full. Cannot insert &quot; &lt;&lt; value &lt;&lt; &quot;.\n&quot;;
+            return;
+        }
+
+        if (isEmpty()) front = 0;
+        rear = (rear + 1) % MAX;
+        arr[rear] = value;
+        cout &lt;&lt; value &lt;&lt; &quot; inserted into the queue.\n&quot;;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout &lt;&lt; &quot;Queue is empty. Nothing to delete.\n&quot;;
+            return;
+        }
+
+        cout &lt;&lt; &quot;Deleted element: &quot; &lt;&lt; arr[front] &lt;&lt; &#x27;\n&#x27;;
+
+        if (front == rear) {
+            front = rear = -1;
+        } else {
+            front = (front + 1) % MAX;
+        }
+    }
+
+    void display() const {
+        if (isEmpty()) {
+            cout &lt;&lt; &quot;Queue is empty.\n&quot;;
+            return;
+        }
+
+        cout &lt;&lt; &quot;Queue elements: &quot;;
+        int i = front;
+        while (true) {
+            cout &lt;&lt; arr[i] &lt;&lt; &quot; &quot;;
+            if (i == rear) break;
+            i = (i + 1) % MAX;
+        }
+        cout &lt;&lt; &#x27;\n&#x27;;
+    }
+};
+
+int main() {
+    CircularQueue q;
+    int choice, value;
+
+    do {
+        cout &lt;&lt; &quot;\n--- CIRCULAR QUEUE ---\n&quot;;
+        cout &lt;&lt; &quot;1. Enqueue\n2. Dequeue\n3. Display\n0. Exit\n&quot;;
+        cout &lt;&lt; &quot;Enter choice: &quot;;
+        cin &gt;&gt; choice;
+
+        switch (choice) {
+            case 1:
+                cout &lt;&lt; &quot;Enter value: &quot;;
+
+
+                cin &gt;&gt; value;
+                q.enqueue(value);
+                break;
+            case 2:
+                q.dequeue();
+                break;
+            case 3:
+                q.display();
+                break;
+            case 0:
+                cout &lt;&lt; &quot;Program ended.\n&quot;;
+                break;
+            default:
+                cout &lt;&lt; &quot;Invalid choice.\n&quot;;
+        }
+    } while (choice != 0);
+
+    return 0;
+}</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — Enqueue 10, 20, 30, Display, Dequeue, Display:
+
+10 inserted into the queue.
+20 inserted into the queue.
+30 inserted into the queue.
+Queue elements: 10 20 30
+Deleted element: 10
+Queue elements: 20 30</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-4" data-search="practical 4 binary search tree operations implement a binary search tree with duplicate handling and perform insertion, deletion, search, traversal, depth calculation, mirror image, copying, parent-child display, leaf-node display and level-wise traversal.">
+    <h2>Practical 4</h2>
+    <p class="aim"><strong>Binary Search Tree Operations</strong><br>Implement a binary search tree with duplicate handling and perform insertion, deletion, search, traversal, depth calculation, mirror image, copying, parent-child display, leaf-node display and level-wise traversal.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment4_bst.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>from collections import deque
+import copy
+
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+def insert(root, value):
+    if root is None:
+        return Node(value)
+    if value &lt; root.value:
+        root.left = insert(root.left, value)
+    elif value &gt; root.value:
+        root.right = insert(root.right, value)
+    else:
+        print(&quot;Duplicate value. Insertion skipped.&quot;)
+    return root
+
+
+def search(root, key):
+    if root is None or root.value == key:
+        return root
+    if key &lt; root.value:
+        return search(root.left, key)
+    return search(root.right, key)
+
+
+def minimum_node(root):
+    current = root
+    while current.left is not None:
+        current = current.left
+    return current
+
+
+def delete(root, key):
+    if root is None:
+        return None
+    if key &lt; root.value:
+        root.left = delete(root.left, key)
+    elif key &gt; root.value:
+        root.right = delete(root.right, key)
+    else:
+        if root.left is None:
+            return root.right
+        if root.right is None:
+            return root.left
+        successor = minimum_node(root.right)
+        root.value = successor.value
+        root.right = delete(root.right, successor.value)
+    return root
+
+
+def inorder(root):
+    if root:
+        inorder(root.left)
+        print(root.value, end=&quot; &quot;)
+        inorder(root.right)
+
+
+def preorder(root):
+    if root:
+        print(root.value, end=&quot; &quot;)
+        preorder(root.left)
+        preorder(root.right)
+
+
+def postorder(root):
+    if root:
+        postorder(root.left)
+        postorder(root.right)
+        print(root.value, end=&quot; &quot;)
+
+
+def depth(root):
+    if root is None:
+        return 0
+    return 1 + max(depth(root.left), depth(root.right))
+
+
+def mirror(root):
+    if root:
+        root.left, root.right = root.right, root.left
+        mirror(root.left)
+        mirror(root.right)
+    return root
+
+
+def display_parents(root):
+    if root is None:
+        return
+    if root.left or root.right:
+        left_value = root.left.value if root.left else &quot;None&quot;
+        right_value = root.right.value if root.right else &quot;None&quot;
+        print(f&quot;Parent {root.value}: left child = {left_value}, right child = {right_value}&quot;)
+    display_parents(root.left)
+    display_parents(root.right)
+
+
+def display_leaves(root):
+    if root is None:
+        return
+    if root.left is None and root.right is None:
+        print(root.value, end=&quot; &quot;)
+    display_leaves(root.left)
+    display_leaves(root.right)
+
+
+def level_order(root):
+    if root is None:
+        print(&quot;Tree is empty.&quot;, end=&quot;&quot;)
+        return
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        print(node.value, end=&quot; &quot;)
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+
+
+def read_int(prompt):
+    try:
+        return int(input(prompt))
+    except ValueError:
+        print(&quot;Please enter a valid integer.&quot;)
+        return None
+
+
+def main():
+    root = None
+    while True:
+        print(&quot;\n--- BINARY SEARCH TREE ---&quot;)
+        print(&quot;1. Insert&quot;)
+        print(&quot;2. Delete&quot;)
+        print(&quot;3. Search&quot;)
+        print(&quot;4. Display traversals&quot;)
+        print(&quot;5. Display depth&quot;)
+        print(&quot;6. Display mirror image&quot;)
+        print(&quot;7. Create and display a copy&quot;)
+        print(&quot;8. Display parent nodes and children&quot;)
+        print(&quot;9. Display leaf nodes&quot;)
+        print(&quot;10. Display tree level-wise&quot;)
+        print(&quot;0. Exit&quot;)
+
+        choice = read_int(&quot;Enter choice: &quot;)
+        if choice is None:
+            continue
+
+        if choice == 1:
+            value = read_int(&quot;Enter value to insert: &quot;)
+            if value is not None:
+                root = insert(root, value)
+        elif choice == 2:
+            value = read_int(&quot;Enter value to delete: &quot;)
+            if value is not None:
+                if search(root, value):
+                    root = delete(root, value)
+                    print(&quot;Node deleted.&quot;)
+                else:
+                    print(&quot;Value not found.&quot;)
+        elif choice == 3:
+            value = read_int(&quot;Enter value to search: &quot;)
+            if value is not None:
+                print(&quot;Value found.&quot; if search(root, value) else &quot;Value not found.&quot;)
+        elif choice == 4:
+            print(&quot;Inorder   : &quot;, end=&quot;&quot;)
+            inorder(root)
+            print(&quot;\nPreorder  : &quot;, end=&quot;&quot;)
+            preorder(root)
+            print(&quot;\nPostorder : &quot;, end=&quot;&quot;)
+            postorder(root)
+            print()
+        elif choice == 5:
+            print(&quot;Depth (number of levels):&quot;, depth(root))
+        elif choice == 6:
+            # Mirror a COPY so the original BST stays valid.
+            mirrored = mirror(copy.deepcopy(root))
+            print(&quot;Mirror image (level order): &quot;, end=&quot;&quot;)
+            level_order(mirrored)
+            print()
+        elif choice == 7:
+            copied_root = copy.deepcopy(root)
+            print(&quot;Copy created. Copy in level order: &quot;, end=&quot;&quot;)
+            level_order(copied_root)
+            print()
+        elif choice == 8:
+            if root is None:
+                print(&quot;Tree is empty.&quot;)
+            else:
+                display_parents(root)
+        elif choice == 9:
+            print(&quot;Leaf nodes: &quot;, end=&quot;&quot;)
+            display_leaves(root)
+            print()
+        elif choice == 10:
+            print(&quot;Level-wise traversal: &quot;, end=&quot;&quot;)
+            level_order(root)
+            print()
+        elif choice == 0:
+            print(&quot;Program ended.&quot;)
+            break
+        else:
+            print(&quot;Invalid choice.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — Insert 50, 30, 70, 20, 40, 60, 80, then:
+
+Inorder   : 20 30 40 50 60 70 80
+Preorder  : 50 30 20 40 70 60 80
+Postorder : 20 40 30 60 80 70 50
+Depth (number of levels): 3
+Parent 50: left child = 30, right child = 70
+Parent 30: left child = 20, right child = 40
+Parent 70: left child = 60, right child = 80
+Leaf nodes: 20 40 60 80
+Level-wise traversal: 50 30 70 20 40 60 80
+Search 40 -&gt; Value found.
+Mirror image (level order): 50 70 30 80 60 40 20</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-5" data-search="practical 5 college campus graph – minimum spanning tree (prim&#x27;s and kruskal&#x27;s algorithms) represent a weighted college-campus graph using an adjacency matrix and edge list. find a minimum spanning tree using prim&#x27;s algorithm and kruskal&#x27;s algorithm. the sample vertex names and distances are illustrative; replace them with actual campus locations and measured distances if required.">
+    <h2>Practical 5</h2>
+    <p class="aim"><strong>College Campus Graph – Minimum Spanning Tree (Prim&#x27;s and Kruskal&#x27;s Algorithms)</strong><br>Represent a weighted college-campus graph using an adjacency matrix and edge list. Find a minimum spanning tree using Prim&#x27;s algorithm and Kruskal&#x27;s algorithm. The sample vertex names and distances are illustrative; replace them with actual campus locations and measured distances if required.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment5_minimum_spanning_tree.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>class Graph:
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.V = len(vertices)
+        self.adj = [[0] * self.V for _ in range(self.V)]
+        self.edges = []
+
+    def add_edge(self, u, v, weight):
+        if u == v or weight &lt;= 0:
+            print(&quot;Use two different vertices and a positive distance.&quot;)
+            return
+        self.adj[u][v] = weight
+        self.adj[v][u] = weight
+        self.edges.append((weight, u, v))
+
+    def display_matrix(self):
+        print(&quot;\nAdjacency matrix (0 means no direct edge):&quot;)
+        print(&quot;      &quot; + &quot; &quot;.join(f&quot;{name[:6]:&gt;7}&quot; for name in self.vertices))
+        for i, row in enumerate(self.adj):
+            print(f&quot;{self.vertices[i][:6]:&gt;6} &quot; +
+                  &quot; &quot;.join(f&quot;{value:&gt;7}&quot; for value in row))
+
+    def prim(self):
+        if self.V == 0:
+            return
+        selected = [False] * self.V
+        selected[0] = True
+        result = []
+        total = 0
+
+        for _ in range(self.V - 1):
+            best_weight = float(&quot;inf&quot;)
+            best_edge = None
+            for u in range(self.V):
+                if selected[u]:
+                    for v in range(self.V):
+                        weight = self.adj[u][v]
+                        if weight &gt; 0 and not selected[v] and weight &lt; best_weight:
+                            best_weight = weight
+                            best_edge = (u, v, weight)
+
+            if best_edge is None:
+                print(&quot;Graph is disconnected; a spanning tree cannot be formed.&quot;)
+                return
+
+            u, v, weight = best_edge
+            selected[v] = True
+            result.append((u, v, weight))
+            total += weight
+
+        print(&quot;\nPrim&#x27;s Minimum Spanning Tree:&quot;)
+        for u, v, weight in result:
+            print(f&quot;{self.vertices[u]} -- {self.vertices[v]} : {weight}&quot;)
+        print(&quot;Total MST distance:&quot;, total)
+
+    def find(self, parent, vertex):
+        if parent[vertex] != vertex:
+            parent[vertex] = self.find(parent, parent[vertex])
+        return parent[vertex]
+
+    def union(self, parent, rank, x, y):
+        root_x = self.find(parent, x)
+        root_y = self.find(parent, y)
+        if root_x == root_y:
+            return False
+        if rank[root_x] &lt; rank[root_y]:
+            parent[root_x] = root_y
+        elif rank[root_x] &gt; rank[root_y]:
+            parent[root_y] = root_x
+        else:
+            parent[root_y] = root_x
+            rank[root_x] += 1
+        return True
+
+    def kruskal(self):
+
+
+        parent = list(range(self.V))
+        rank = [0] * self.V
+        result = []
+        total = 0
+
+        for weight, u, v in sorted(self.edges):
+            if self.union(parent, rank, u, v):
+                result.append((u, v, weight))
+                total += weight
+                if len(result) == self.V - 1:
+                    break
+
+        if len(result) != self.V - 1:
+            print(&quot;Graph is disconnected; a spanning tree cannot be formed.&quot;)
+            return
+
+        print(&quot;\nKruskal&#x27;s Minimum Spanning Tree:&quot;)
+        for u, v, weight in result:
+            print(f&quot;{self.vertices[u]} -- {self.vertices[v]} : {weight}&quot;)
+        print(&quot;Total MST distance:&quot;, total)
+
+
+def main():
+    # Illustrative campus locations and distances (in metres).
+    places = [&quot;Main Gate&quot;, &quot;IT Dept&quot;, &quot;Library&quot;, &quot;Canteen&quot;, &quot;Admin&quot;]
+    graph = Graph(places)
+
+    graph.add_edge(0, 1, 120)
+    graph.add_edge(0, 2, 180)
+    graph.add_edge(1, 2, 70)
+    graph.add_edge(1, 3, 100)
+    graph.add_edge(2, 3, 90)
+    graph.add_edge(2, 4, 150)
+    graph.add_edge(3, 4, 110)
+    graph.add_edge(0, 4, 250)
+
+    graph.display_matrix()
+    graph.prim()
+    graph.kruskal()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>This program needs no input — it runs on the built-in campus graph:
+
+Prim&#x27;s Minimum Spanning Tree:
+Main Gate -- IT Dept : 120
+IT Dept -- Library : 70
+Library -- Canteen : 90
+Canteen -- Admin : 110
+Total MST distance: 390
+
+Kruskal&#x27;s Minimum Spanning Tree:
+IT Dept -- Library : 70
+Library -- Canteen : 90
+Canteen -- Admin : 110
+Main Gate -- IT Dept : 120
+Total MST distance: 390</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-6" data-search="practical 6 heap sort algorithm design and implement heap sort to sort an array of integers in ascending order, demonstrating the use of a max-heap.">
+    <h2>Practical 6</h2>
+    <p class="aim"><strong>Heap Sort Algorithm</strong><br>Design and implement heap sort to sort an array of integers in ascending order, demonstrating the use of a max-heap.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment6_heap_sort.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>def heapify(arr, n, root):
+    largest = root
+    left = 2 * root + 1
+    right = 2 * root + 2
+
+    if left &lt; n and arr[left] &gt; arr[largest]:
+        largest = left
+    if right &lt; n and arr[right] &gt; arr[largest]:
+        largest = right
+
+    if largest != root:
+        arr[root], arr[largest] = arr[largest], arr[root]
+        heapify(arr, n, largest)
+
+
+def heap_sort(arr):
+    n = len(arr)
+
+    # Build a max-heap.
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+    # Move the largest element to the end repeatedly.
+    for end in range(n - 1, 0, -1):
+        arr[0], arr[end] = arr[end], arr[0]
+        heapify(arr, end, 0)
+
+
+def main():
+    arr = list(map(int, input(&quot;Enter integers separated by spaces: &quot;).split()))
+    print(&quot;Original array:&quot;, arr)
+    heap_sort(arr)
+    print(&quot;Array in ascending order:&quot;, arr)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run:
+
+Enter integers separated by spaces: 64 34 25 12 22 11 90
+Original array: [64, 34, 25, 12, 22, 11, 90]
+Array in ascending order: [11, 12, 22, 25, 34, 64, 90]</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-7" data-search="practical 7 merge sort for online orders sort online orders by estimated delivery time in minutes using merge sort so that quicker deliveries are prioritized first.">
+    <h2>Practical 7</h2>
+    <p class="aim"><strong>Merge Sort for Online Orders</strong><br>Sort online orders by estimated delivery time in minutes using merge sort so that quicker deliveries are prioritized first.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment7_merge_sort_orders.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>class Order:
+    def __init__(self, order_id, delivery_time):
+        self.order_id = order_id
+        self.delivery_time = delivery_time
+
+
+def merge_sort(orders):
+    if len(orders) &lt;= 1:
+        return orders
+
+    middle = len(orders) // 2
+    left = merge_sort(orders[:middle])
+    right = merge_sort(orders[middle:])
+
+    merged = []
+    i = j = 0
+
+    while i &lt; len(left) and j &lt; len(right):
+        if left[i].delivery_time &lt;= right[j].delivery_time:
+            merged.append(left[i])
+            i += 1
+        else:
+            merged.append(right[j])
+            j += 1
+
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
+
+
+def main():
+    count = int(input(&quot;Enter number of orders: &quot;))
+    orders = []
+
+    for i in range(count):
+        print(f&quot;Order {i + 1}:&quot;)
+        order_id = input(&quot; Enter order ID: &quot;)
+        delivery_time = int(input(&quot; Estimated delivery time (minutes): &quot;))
+        orders.append(Order(order_id, delivery_time))
+
+    sorted_orders = merge_sort(orders)
+
+    print(&quot;\nOrders sorted by quickest delivery:&quot;)
+    for order in sorted_orders:
+        print(f&quot;Order ID: {order.order_id} - Delivery time: {order.delivery_time} minutes&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — 3 orders: ORD1 = 30 min, ORD2 = 10 min, ORD3 = 20 min
+
+Orders sorted by quickest delivery:
+Order ID: ORD2 - Delivery time: 10 minutes
+Order ID: ORD3 - Delivery time: 20 minutes
+Order ID: ORD1 - Delivery time: 30 minutes</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-8" data-search="practical 8 fractional knapsack maximize the total profit of parcels loaded into a truck with limited weight capacity. parcels may be selected fully or partially using the profit-to-weight ratio (greedy strategy).">
+    <h2>Practical 8</h2>
+    <p class="aim"><strong>Fractional Knapsack</strong><br>Maximize the total profit of parcels loaded into a truck with limited weight capacity. Parcels may be selected fully or partially using the profit-to-weight ratio (greedy strategy).</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment8_fractional_knapsack.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>def fractional_knapsack(capacity, parcels):
+    # Each parcel is represented as (parcel_id, weight, profit).
+    parcels = sorted(parcels, key=lambda item: item[2] / item[1], reverse=True)
+
+    total_profit = 0.0
+    selected = []
+
+    for parcel_id, weight, profit in parcels:
+        if capacity &lt;= 0:
+            break
+
+        if weight &lt;= capacity:
+            fraction = 1.0
+            total_profit += profit
+            capacity -= weight
+        else:
+            fraction = capacity / weight
+            total_profit += profit * fraction
+            capacity = 0
+
+        selected.append((parcel_id, fraction, profit * fraction))
+
+    return total_profit, selected
+
+
+def main():
+    count = int(input(&quot;Enter number of parcels: &quot;))
+    parcels = []
+
+    for i in range(count):
+        print(f&quot;Parcel {i + 1}:&quot;)
+        weight = float(input(&quot; Enter weight (must be greater than 0): &quot;))
+        while weight &lt;= 0:
+            print(&quot;Weight must be greater than zero.&quot;)
+            weight = float(input(&quot; Enter weight: &quot;))
+        profit = float(input(&quot; Enter profit: &quot;))
+        parcel_id = input(&quot; Enter parcel ID: &quot;)
+        parcels.append((parcel_id, weight, profit))
+
+    capacity = float(input(&quot;Enter truck capacity: &quot;))
+    if capacity &lt; 0:
+        print(&quot;Capacity cannot be negative.&quot;)
+        return
+
+    maximum_profit, selected = fractional_knapsack(capacity, parcels)
+
+    print(&quot;\nSelected parcels:&quot;)
+    for parcel_id, fraction, earned_profit in selected:
+        print(f&quot;Parcel {parcel_id}: {fraction * 100:.2f}% selected, &quot;
+              f&quot;profit = {earned_profit:.2f}&quot;)
+
+    print(f&quot;Maximum profit = {maximum_profit:.2f}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — parcels P1: 10 kg / profit 60, P2: 20 kg / profit 100,
+P3: 30 kg / profit 120, truck capacity = 50
+
+Selected parcels:
+Parcel P1: 100.00% selected, profit = 60.00
+Parcel P2: 100.00% selected, profit = 100.00
+Parcel P3: 66.67% selected, profit = 80.00
+Maximum profit = 240.00</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-9" data-search="practical 9 naive string-matching algorithm given a text string of length n and a pattern string of length m, find every starting index at which the pattern exactly matches a substring of the text. the program supports letters, digits and other characters, and also handles an empty pattern.">
+    <h2>Practical 9</h2>
+    <p class="aim"><strong>Naive String-Matching Algorithm</strong><br>Given a text string of length n and a pattern string of length m, find every starting index at which the pattern exactly matches a substring of the text. The program supports letters, digits and other characters, and also handles an empty pattern.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment9_naive_string_matching.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>def naive_string_match(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    matches = []
+
+    # By convention, an empty pattern matches at every boundary.
+    if m == 0:
+        return list(range(n + 1))
+
+    if m &gt; n:
+        return matches
+
+    for i in range(n - m + 1):
+        j = 0
+        while j &lt; m and text[i + j] == pattern[j]:
+            j += 1
+
+        if j == m:
+            matches.append(i)
+
+    return matches
+
+
+def main():
+    text = input(&quot;Enter the text: &quot;)
+    pattern = input(&quot;Enter the pattern: &quot;)
+
+    positions = naive_string_match(text, pattern)
+
+    if positions:
+        print(&quot;Pattern found at index/indices:&quot;, positions)
+    else:
+        print(&quot;Pattern not found in the text.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run:
+
+Enter the text: ABABDABACDABABCABAB
+Enter the pattern: ABABCABAB
+Pattern found at index/indices: [10]</code></pre>
+    </div>
+  </section>
+  <section class="practical" id="practical-10" data-search="practical 10 maze navigation using breadth-first search (bfs) find a shortest path from a starting cell to a goal cell using bfs. the program displays the maze and the discovered path, and allows the user to change open cells into walls or walls into open cells before solving again (a simple dynamic-maze update). a cell value of 1 is open and 0 is a wall.">
+    <h2>Practical 10</h2>
+    <p class="aim"><strong>Maze Navigation Using Breadth-First Search (BFS)</strong><br>Find a shortest path from a starting cell to a goal cell using BFS. The program displays the maze and the discovered path, and allows the user to change open cells into walls or walls into open cells before solving again (a simple dynamic-maze update). A cell value of 1 is open and 0 is a wall.</p>
+    <div class="codebox">
+      <div class="codehead"><span class="lang">experiment10_maze_bfs.py</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy code</button></div>
+      <pre><code>from collections import deque
+
+
+def bfs_maze(maze, source, destination):
+    rows = len(maze)
+    cols = len(maze[0])
+
+    sr, sc = source
+    dr, dc = destination
+
+    if not (0 &lt;= sr &lt; rows and 0 &lt;= sc &lt; cols and
+            0 &lt;= dr &lt; rows and 0 &lt;= dc &lt; cols):
+        return None
+    if maze[sr][sc] == 0 or maze[dr][dc] == 0:
+        return None
+
+    queue = deque([source])
+    visited = [[False] * cols for _ in range(rows)]
+    parent = {source: None}
+    visited[sr][sc] = True
+
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+    while queue:
+        row, col = queue.popleft()
+
+        if (row, col) == destination:
+            path = []
+            current = destination
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            path.reverse()
+            return path
+
+        for dr_step, dc_step in directions:
+            new_row = row + dr_step
+            new_col = col + dc_step
+
+            if (0 &lt;= new_row &lt; rows and 0 &lt;= new_col &lt; cols and
+                    maze[new_row][new_col] == 1 and
+                    not visited[new_row][new_col]):
+                visited[new_row][new_col] = True
+                next_cell = (new_row, new_col)
+                parent[next_cell] = (row, col)
+                queue.append(next_cell)
+
+    return None
+
+
+def display_maze(maze, path=None, source=None, destination=None):
+    path_cells = set(path) if path else set()
+    print(&quot;\nMaze legend: S = start, G = goal, * = shortest path, # = wall, . = open&quot;)
+    for r in range(len(maze)):
+        row_display = []
+        for c in range(len(maze[0])):
+            cell = (r, c)
+            if cell == source:
+                symbol = &quot;S&quot;
+            elif cell == destination:
+                symbol = &quot;G&quot;
+            elif cell in path_cells:
+                symbol = &quot;*&quot;
+            elif maze[r][c] == 0:
+                symbol = &quot;#&quot;
+            else:
+                symbol = &quot;.&quot;
+            row_display.append(symbol)
+        print(&quot; &quot;.join(row_display))
+
+
+def main():
+    # 1 = open path, 0 = wall. Edit this maze as needed.
+    maze = [
+        [1, 0, 1, 1, 1],
+        [1, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1],
+        [0, 0, 0, 0, 1],
+
+
+        [1, 1, 1, 1, 1]
+    ]
+
+    source = (0, 0)
+    destination = (4, 4)
+
+    while True:
+        display_maze(maze, source=source, destination=destination)
+        print(&quot;\n1. Find shortest path using BFS&quot;)
+        print(&quot;2. Change a maze cell (dynamic update)&quot;)
+        print(&quot;3. Reset the sample maze&quot;)
+        print(&quot;0. Exit&quot;)
+        choice = input(&quot;Enter choice: &quot;).strip()
+
+        if choice == &quot;1&quot;:
+            path = bfs_maze(maze, source, destination)
+            if path is None:
+                print(&quot;No valid path exists.&quot;)
+            else:
+                print(&quot;Shortest path:&quot;, path)
+                print(&quot;Number of moves:&quot;, len(path) - 1)
+                display_maze(maze, path, source, destination)
+
+        elif choice == &quot;2&quot;:
+            try:
+                row = int(input(f&quot;Enter row (0 to {len(maze) - 1}): &quot;))
+                col = int(input(f&quot;Enter column (0 to {len(maze[0]) - 1}): &quot;))
+                if not (0 &lt;= row &lt; len(maze) and 0 &lt;= col &lt; len(maze[0])):
+                    print(&quot;Cell is outside the maze.&quot;)
+                    continue
+                if (row, col) in (source, destination):
+                    print(&quot;Start and goal cells cannot be changed.&quot;)
+                    continue
+                maze[row][col] = 1 - maze[row][col]
+                print(&quot;Cell updated. Solve again to find a path in the new maze.&quot;)
+            except ValueError:
+                print(&quot;Please enter row and column as integers.&quot;)
+
+        elif choice == &quot;3&quot;:
+            maze = [
+                [1, 0, 1, 1, 1],
+                [1, 0, 1, 0, 1],
+                [1, 1, 1, 0, 1],
+                [0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1]
+            ]
+            print(&quot;Sample maze restored.&quot;)
+
+        elif choice == &quot;0&quot;:
+            print(&quot;Program ended.&quot;)
+            break
+        else:
+            print(&quot;Invalid choice.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+    </div>
+    <p class="outlabel">Expected Output (sample run)</p>
+    <div class="codebox outbox">
+      <div class="codehead outhead"><span class="lang">Output</span><button class="copy-btn" onclick="copyCode(this)">&#10697; Copy</button></div>
+      <pre><code>Sample run — choose 1 (Find shortest path using BFS):
+
+Shortest path: [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4)]
+Number of moves: 12
+
+S # * * *
+* # * # *
+* * * # *
+# # # # *
+. . . . G
+(S = start, G = goal, * = shortest path, # = wall)</code></pre>
+    </div>
+  </section>
+</main>
+<footer>DSA Practicals 1-10 - all codes tested and working</footer>
+<script>
+function copyCode(btn){
+  var code = btn.closest('.codebox').querySelector('pre code').innerText;
+  function done(){
+    var old = btn.innerHTML;
+    btn.innerHTML = '\u2713 Copied'; btn.classList.add('copied');
+    setTimeout(function(){ btn.innerHTML = old; btn.classList.remove('copied'); }, 2000);
+  }
+  function fallback(){
+    var ta=document.createElement('textarea'); ta.value=code; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(code).then(done).catch(fallback);
+  } else { fallback(); }
+}
+document.getElementById('search').addEventListener('input', function(e){
+  var q = e.target.value.toLowerCase().trim();
+  document.querySelectorAll('section.practical').forEach(function(s){
+    var hay = (s.getAttribute('data-search')||'') + ' ' + s.innerText.toLowerCase();
+    s.classList.toggle('hidden', q && hay.indexOf(q) === -1);
+  });
+});
+</script>
+</body>
+</html>
